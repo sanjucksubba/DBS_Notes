@@ -10,6 +10,7 @@ The design process for a database application can be divided into six phases:
 4.	Schema refinement — analyzing the logical schema to identify and correct potential problems, primarily through normalization (covered in Unit V).
 5.	Physical database design — deciding on physical features such as file organization and indices.
 6.	Application and security design — designing the application programs and security/access controls around the database.
+   
 
 2.2 Relational Modeling
 
@@ -29,6 +30,7 @@ The relational model represents data as a collection of relations (tables). Key 
 
 Each attribute value must, in general, be atomic (indivisible) — multivalued or composite attributes from an E-R diagram must be decomposed into atomic values when mapped to the relational model.
 
+
 2.3 The Entity-Relationship Model
 
 The E-R model views the real world as a set of basic objects (entities) and relationships among them. It is widely used for conceptual database design.
@@ -45,6 +47,7 @@ The E-R model views the real world as a set of basic objects (entities) and rela
 
 E-R diagrams use rectangles for entity sets, diamonds for relationship sets, and lines/ovals to connect attributes.
 
+
 2.4 Complex Attributes
 
 Attributes in the E-R model can be classified by structure:
@@ -56,6 +59,7 @@ Attributes in the E-R model can be classified by structure:
 •	Derived attribute: a value that can be computed/derived from other related attributes or entities (e.g., age can be derived from date_of_birth and the current date). The stored attribute on which it depends is sometimes called a base attribute.
 
 An attribute (or combination) takes a null value when an entity does not have a value for it, or the value is unknown/not applicable.
+
 
 2.5 Mapping Cardinalities
 
@@ -69,6 +73,7 @@ Mapping cardinality (or cardinality ratio) expresses the number of entities to w
 
 •	Many-to-many (M:N): an entity in A can be associated with any number of entities in B, and vice versa.
 Cardinality constraints are chosen based on the real-world situation being modeled and directly affect how relationships are mapped to relational schemas.
+
 
 2.6 Primary Key
 
@@ -84,6 +89,7 @@ A primary key is a minimal set of attributes (a candidate key) that can uniquely
 
 For weak entity sets (entities that do not have enough attributes to form their own primary key), the primary key is formed by combining the partial key of the weak entity with the primary key of the identifying (owner/strong) entity set.
 
+
 2.7 Removing Redundant Attributes in Entity Sets
 
 When converting E-R diagrams to relational schemas, redundancy can occur — particularly when relationships are mapped in a way that duplicates information already captured by another entity's primary key or by a relationship's foreign key. Designers should:
@@ -93,6 +99,7 @@ When converting E-R diagrams to relational schemas, redundancy can occur — par
 •	Identify attributes that depend on (are functionally determined by) other attributes already present via a relationship, and remove the redundant copies — this overlaps with normalization concepts covered later in Unit V.
 
 Removing such redundancies early reduces storage waste and avoids data-inconsistency problems before schema refinement (normalization) is even applied.
+
 
 2.8 Reducing E-R Diagrams to Relational Schemas
 
@@ -114,6 +121,7 @@ A database designed using the E-R model can be represented by a collection of re
 
 •	Composite attributes: are flattened — each component becomes a separate attribute of the relation.
 
+
 2.9 Extended E-R Features
 
 The basic E-R model can be extended with additional features to capture more complex applications:
@@ -126,8 +134,8 @@ Attribute inheritance: a lower-level entity set inherits all the attributes and 
 
 Constraints on generalization: include whether membership in a lower-level entity set is total (every higher-level entity must belong to some lower-level entity set) or partial, and whether sets are disjoint (an entity can belong to only one lower-level set) or overlapping.
 
-
 Aggregation: an abstraction in which relationship sets are treated as higher-level entity sets, allowing them to participate in further relationships — used when a relationship between relationships needs to be expressed.
+
 
 2.10 Entity-Relationship Design Issues
 
@@ -141,6 +149,7 @@ Several subtle design decisions arise when modeling with E-R diagrams:
 
 •	Placement of relationship attributes: deciding whether an attribute belongs to an entity or to the relationship connecting entities (e.g., should 'date' belong to the relationship 'borrows' rather than to 'book' or 'member').
 
+
 2.11 Alternative Notations for Modeling Data
 
 Besides the classic Chen notation (rectangles for entities, diamonds for relationships, ovals for attributes), several alternative notations are widely used in practice:
@@ -150,6 +159,7 @@ Besides the classic Chen notation (rectangles for entities, diamonds for relatio
 •	Crow's foot notation: a popular notation for representing cardinality constraints directly on the connecting lines using symbols resembling a crow's foot (for 'many') and circles/bars (for optional/mandatory participation), commonly used in many database design tools.
 
 These notations convey largely the same underlying information as the E-R model but differ in graphical conventions; designers should be able to read and translate between them.
+
 
 2.12 Other Aspects of Database Design
 
@@ -163,6 +173,7 @@ Beyond data modeling itself, database design also needs to consider:
 •	User views — designing how different categories of users will interact with and view the data (tying back to the view-level abstraction from Unit I).
 
 •	Performance considerations — although detailed physical design comes later, designers should keep in mind how the logical design will affect future indexing and query performance.
+
 
 2.13 Atomicity, Consistency, Isolation and Durability
 
