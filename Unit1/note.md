@@ -1,4 +1,5 @@
 Unit I: Introduction to Database Systems
+
 1.1 View of Data
 A database system provides users with an abstract view of data — it hides certain details of how data is stored and maintained. This abstraction is achieved through three levels:
 •	Physical level (lowest): describes how data is actually stored — bytes, blocks, files, indexes.
