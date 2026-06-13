@@ -21,6 +21,7 @@ Before DBMSs, organizations stored data in file-processing systems using applica
 A DBMS addresses all these problems by providing centralized control, data abstraction, and mechanisms for integrity, concurrency, recovery, and security.
 
 1.3 History of Database Systems
+
 •	1950s–60s: Magnetic tape used for data storage — sequential access only.
 •	Late 1960s–70s: Hard disks allowed direct (random) access; network and hierarchical data models emerged (e.g., IBM IMS).
 •	1970: E.F. Codd introduced the relational model — a landmark paper that defined data independence and set-based query processing.
