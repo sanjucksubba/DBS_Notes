@@ -3,6 +3,7 @@ Unit II: Database Design
 2.1 Overview of the Design Process
 
 The design process for a database application can be divided into six phases:
+
 5.	Requirements analysis — interviewing stakeholders to determine data requirements.
 6.	Conceptual database design — creating a high-level data model (e.g., E-R diagram) independent of any specific DBMS.
 7.	Logical database design — converting the conceptual schema into the data model of the chosen DBMS (typically the relational model), producing a relational database schema.
@@ -13,6 +14,7 @@ The design process for a database application can be divided into six phases:
 2.2 Relational Modeling
 
 The relational model represents data as a collection of relations (tables). Key terminology:
+
 •	Relation: a table with rows and columns.
 •	Tuple: a row of a relation, representing a single record.
 •	Attribute: a column of a relation, representing a property of the entity.
@@ -24,6 +26,7 @@ Each attribute value must, in general, be atomic (indivisible) — multivalued o
 2.3 The Entity-Relationship Model
 
 The E-R model views the real world as a set of basic objects (entities) and relationships among them. It is widely used for conceptual database design.
+
 •	Entity: a 'thing' or 'object' in the real world that is distinguishable from other objects (e.g., a specific person, course, or account).
 •	Entity set: a set of entities of the same type that share the same properties/attributes (e.g., all instructors).
 •	Relationship: an association among several entities (e.g., an instructor advises a student).
@@ -34,6 +37,7 @@ E-R diagrams use rectangles for entity sets, diamonds for relationship sets, and
 2.4 Complex Attributes
 
 Attributes in the E-R model can be classified by structure:
+
 •	Simple vs. composite: a simple attribute cannot be divided further (e.g., age); a composite attribute can be divided into smaller sub-parts (e.g., name divided into first_name and last_name).
 •	Single-valued vs. multivalued: most attributes are single-valued, but a multivalued attribute can have multiple values for a single entity (e.g., a person can have several phone_number values).
 •	Derived attribute: a value that can be computed/derived from other related attributes or entities (e.g., age can be derived from date_of_birth and the current date). The stored attribute on which it depends is sometimes called a base attribute.
@@ -42,6 +46,7 @@ An attribute (or combination) takes a null value when an entity does not have a 
 2.5 Mapping Cardinalities
 
 Mapping cardinality (or cardinality ratio) expresses the number of entities to which another entity can be associated via a relationship set. For binary relationship sets between entity sets A and B, the possible mapping cardinalities are:
+
 •	One-to-one (1:1): an entity in A is associated with at most one entity in B, and vice versa.
 •	One-to-many (1:N): an entity in A can be associated with any number of entities in B, but an entity in B is associated with at most one entity in A.
 •	Many-to-one (N:1): the reverse of one-to-many.
@@ -51,6 +56,7 @@ Cardinality constraints are chosen based on the real-world situation being model
 2.6 Primary Key
 
 A primary key is a minimal set of attributes (a candidate key) that can uniquely identify a tuple within its relation/entity set. Related concepts:
+
 •	Superkey: any set of one or more attributes whose values uniquely determine each entity/tuple.
 •	Candidate key: a minimal superkey — no proper subset of it is also a superkey. A relation may have multiple candidate keys.
 •	Primary key: the candidate key chosen by the database designer as the principal means of identifying tuples within a relation. By convention it is listed first and often underlined in the schema.
@@ -60,6 +66,7 @@ For weak entity sets (entities that do not have enough attributes to form their 
 2.7 Removing Redundant Attributes in Entity Sets
 
 When converting E-R diagrams to relational schemas, redundancy can occur — particularly when relationships are mapped in a way that duplicates information already captured by another entity's primary key or by a relationship's foreign key. Designers should:
+
 •	Avoid storing the same descriptive attribute in multiple entity sets when it logically belongs in one place and can be obtained through a relationship/foreign key reference.
 •	Identify attributes that depend on (are functionally determined by) other attributes already present via a relationship, and remove the redundant copies — this overlaps with normalization concepts covered later in Unit V.
 Removing such redundancies early reduces storage waste and avoids data-inconsistency problems before schema refinement (normalization) is even applied.
@@ -67,6 +74,7 @@ Removing such redundancies early reduces storage waste and avoids data-inconsist
 2.8 Reducing E-R Diagrams to Relational Schemas
 
 A database designed using the E-R model can be represented by a collection of relations using the following standard mapping rules:
+
 •	Strong entity set: becomes a relation with the same attributes; the entity set's primary key becomes the relation's primary key.
 •	Weak entity set: becomes a relation that includes a column for the primary key of the identifying (strong) entity set, plus its own discriminator/partial key; the primary key of the relation is the combination of the strong entity's primary key and the weak entity's discriminator.
 •	Relationship set: in general, becomes a relation whose attributes are the union of the primary keys of the participating entity sets plus any descriptive attributes of the relationship itself. The primary key depends on the cardinality:
@@ -88,6 +96,7 @@ Aggregation: an abstraction in which relationship sets are treated as higher-lev
 2.10 Entity-Relationship Design Issues
 
 Several subtle design decisions arise when modeling with E-R diagrams:
+
 •	Use of entity sets vs. attributes: deciding whether a concept (e.g., 'phone') should be modeled as an attribute of an entity or as its own entity set (the latter is preferred if it has its own attributes, or participates in relationships with other entities, or if there can be multiple values).
 •	Use of entity sets vs. relationship sets: it can sometimes be unclear whether a real-world concept is best expressed by an entity set or a relationship set — a useful guideline is that a relationship set should be used to describe an action that occurs between entities.
 •	Binary vs. n-ary relationship sets: although most relationships are binary, non-binary (n-ary) relationships can sometimes arise; these can often, but not always, be redesigned as multiple binary relationship sets.
@@ -96,6 +105,7 @@ Several subtle design decisions arise when modeling with E-R diagrams:
 2.11 Alternative Notations for Modeling Data
 
 Besides the classic Chen notation (rectangles for entities, diamonds for relationships, ovals for attributes), several alternative notations are widely used in practice:
+
 •	Unified Modeling Language (UML) class diagrams: represent entity sets as classes, with attributes and relationships shown via associations — UML is widely used in software engineering for both database and application design.
 •	Crow's foot notation: a popular notation for representing cardinality constraints directly on the connecting lines using symbols resembling a crow's foot (for 'many') and circles/bars (for optional/mandatory participation), commonly used in many database design tools.
 These notations convey largely the same underlying information as the E-R model but differ in graphical conventions; designers should be able to read and translate between them.
@@ -103,6 +113,7 @@ These notations convey largely the same underlying information as the E-R model 
 2.12 Other Aspects of Database Design
 
 Beyond data modeling itself, database design also needs to consider:
+
 •	Data constraints and business rules that must be enforced by the schema (beyond simple keys), such as domain constraints and check conditions.
 •	Documentation of the design — design choices, naming conventions and assumptions should be documented for future maintainability.
 •	User views — designing how different categories of users will interact with and view the data (tying back to the view-level abstraction from Unit I).
