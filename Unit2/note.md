@@ -4,12 +4,12 @@ Unit II: Database Design
 
 The design process for a database application can be divided into six phases:
 
-5.	Requirements analysis — interviewing stakeholders to determine data requirements.
-6.	Conceptual database design — creating a high-level data model (e.g., E-R diagram) independent of any specific DBMS.
-7.	Logical database design — converting the conceptual schema into the data model of the chosen DBMS (typically the relational model), producing a relational database schema.
-8.	Schema refinement — analyzing the logical schema to identify and correct potential problems, primarily through normalization (covered in Unit V).
-9.	Physical database design — deciding on physical features such as file organization and indices.
-10.	Application and security design — designing the application programs and security/access controls around the database.
+1.	Requirements analysis — interviewing stakeholders to determine data requirements.
+2.	Conceptual database design — creating a high-level data model (e.g., E-R diagram) independent of any specific DBMS.
+3.	Logical database design — converting the conceptual schema into the data model of the chosen DBMS (typically the relational model), producing a relational database schema.
+4.	Schema refinement — analyzing the logical schema to identify and correct potential problems, primarily through normalization (covered in Unit V).
+5.	Physical database design — deciding on physical features such as file organization and indices.
+6.	Application and security design — designing the application programs and security/access controls around the database.
 
 2.2 Relational Modeling
 
