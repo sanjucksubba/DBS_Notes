@@ -1,60 +1,103 @@
 Unit VII: Transactions, Concurrency Control, and Recovery Systems
+
 7.1 Simple Transaction Models
+
 A transaction is a unit of program execution that accesses and possibly updates various data items, usually corresponding to a single logical 'piece of work' (e.g., transferring funds between two bank accounts).
+
 •	In the simple transaction model, a transaction is modeled as a sequence of read and write operations on data items, together with operations to commit (signal successful completion) or abort/rollback (signal that the transaction must be undone).
+
 •	A transaction must be in one of the following states: active (initial state, while executing), partially committed (after the final statement has been executed), committed (after successful completion), failed (after discovering normal execution can no longer proceed), or aborted (after the transaction has been rolled back and the database restored to its state prior to the start of the transaction).
+
 •	After a transaction has been aborted, the system either restarts the transaction (if the failure was not caused by an internal logic error and the cause is likely transient) or kills it (if the abort was caused by some internal logical error that will be repeated if the transaction is re-executed).
 
 7.2 Transaction Atomicity, Isolation and Durability
+
 Although introduced in Unit II as part of ACID, atomicity, isolation, and durability are realized through specific implementation mechanisms in the transaction-management component of a database system:
+
 Atomicity: is typically implemented using a recovery-management component, often based on a log of all writes to the database — if a transaction fails after performing some of its operations but before completing all of them, the log is used to undo any effects of that transaction on the database, ensuring the all-or-nothing property.
+
 Isolation: is implemented using concurrency-control protocols (covered in 7.5–7.7), which ensure that even though transactions may execute concurrently, it appears to each transaction as though other transactions had executed either before it or after it, but not concurrently with it.
+
 Durability: is implemented by ensuring that the updates made by a committed transaction are recorded in non-volatile storage before the transaction is considered complete, typically by writing to a log on disk (covered in 7.8) before the transaction commits — this protects against loss of the updates due to a subsequent system crash.
 
 7.3 Transaction Isolation Levels
+
 While full isolation (serializability) is the strongest and safest guarantee, it can have a significant impact on performance because it restricts how much concurrency is permitted. The SQL standard therefore allows transactions to run at lower isolation levels, which permit certain anomalies in exchange for higher concurrency. The standard isolation levels (in order of increasing strictness) are:
+
 •	Read uncommitted: allows a transaction to read data that has been written by another transaction but not yet committed — permits 'dirty reads'.
+
 •	Read committed: allows a transaction to read only data that has been committed, but does not require that the entire transaction execute in a serializable manner — values read by the transaction may change if the transaction reads the same item twice (a 'non-repeatable read').
+
 •	Repeatable read: ensures that if a transaction reads the same data item more than once, it will read the same value each time — but it is still possible for a transaction to see new ('phantom') rows inserted by another transaction matching a search condition.
+
 •	Serializable: the strictest level, usually the default — guarantees that the execution of concurrent transactions has the same effect as some serial (one-at-a-time) execution of those transactions, eliminating all of the above anomalies (dirty reads, non-repeatable reads, and phantoms).
 
 7.4 Serializability
+
 Serializability is the fundamental correctness criterion for the concurrent execution of transactions: a (possibly concurrent) schedule of operations from multiple transactions is serializable if it produces the same result as some serial schedule (where transactions are executed one after another, with no interleaving).
+
 •	Conflict serializability: two operations from different transactions conflict if they are on the same data item and at least one of them is a write. A schedule is conflict serializable if it can be transformed into a serial schedule by repeatedly swapping non-conflicting operations of adjacent transactions.
+
 •	Precedence graph (serializability graph): a useful tool for testing conflict serializability — a directed graph is constructed with a node for each transaction, and an edge from transaction Ti to Tj if an operation of Ti conflicts with, and comes before, an operation of Tj. A schedule is conflict serializable if and only if its precedence graph is acyclic.
+
 •	View serializability: a more general (but less efficiently testable) notion than conflict serializability — a schedule is view serializable if it is 'view equivalent' to some serial schedule, meaning each transaction reads the same values and the same transaction performs the final write on each data item, in both schedules.
 
 7.5 Lock-Based Protocols
+
 One way to ensure serializability is to require that data items be accessed in a mutually exclusive manner using locks.
+
 •	Shared (S) lock: if a transaction has obtained a shared lock on a data item, it can read, but not write, that item — multiple transactions can hold shared locks on the same item simultaneously.
+
 •	Exclusive (X) lock: if a transaction has obtained an exclusive lock on a data item, it can both read and write that item — only one transaction may hold an exclusive lock on an item at a time, and no other transaction may hold any lock (S or X) on it concurrently.
+
 •	Two-phase locking (2PL) protocol: requires that each transaction issue lock and unlock requests in two phases — a growing phase, during which a transaction may obtain locks but not release any, and a shrinking phase, during which a transaction may release locks but not obtain any new ones. 2PL ensures conflict serializability, but does not by itself prevent deadlock.
+
 •	Variants of 2PL: strict 2PL requires that all exclusive locks be held until the transaction commits or aborts (preventing other transactions from reading or writing an item that has been written by an uncommitted transaction, thus avoiding cascading rollbacks); rigorous 2PL requires that all locks (both shared and exclusive) be held until the transaction commits or aborts.
 
 7.6 Deadlock Handling
+
 Deadlock occurs when each of a set of transactions is waiting for a lock held by another transaction in the set, so that none of them can proceed. There are two main approaches to handling deadlock:
+
 Deadlock prevention: ensures the system will never enter a deadlock state — common protocols include requiring each transaction to lock all its data items before it begins execution (predeclaration), or imposing a partial ordering on data items and requiring transactions to lock items only in that order. Other approaches use transaction timestamps: wait-die (an older transaction may wait for a younger one, but a younger transaction requesting an item held by an older one is rolled back/dies) and wound-wait (an older transaction 'wounds' — forces the rollback of — a younger transaction holding the item it needs, while a younger transaction may wait for an older one).
+
 Deadlock detection and recovery: allows deadlocks to occur, but periodically checks for them and takes action to recover. Detection is performed by maintaining a wait-for graph, with a node for each transaction and an edge from Ti to Tj if Ti is waiting for a lock held by Tj — the system is in a deadlock state if and only if this graph contains a cycle. Recovery from deadlock requires selecting a victim transaction to roll back (chosen, for example, based on how long it has run, or how many resources it holds), determining how far to roll it back (total rollback, or only as far as needed to break the deadlock), and ensuring that the same transactions are not repeatedly chosen as victims (avoiding starvation).
+
 A related issue is starvation, where a particular transaction may never be able to proceed because it is repeatedly involved in deadlocks (or always loses out to higher-priority transactions) — the chosen scheme must ensure that every transaction eventually gets to complete.
 
 7.7 Concurrency Control Mechanisms
+
 Besides lock-based protocols, several other concurrency-control mechanisms have been developed:
+
 •	Timestamp-based protocols: each transaction is assigned a unique timestamp when it begins, and the protocol ensures that, for each data item, conflicting operations are executed in timestamp order — this ensures serializability without requiring locking, but a transaction may need to be rolled back and restarted with a new timestamp if it attempts to violate the ordering.
+
 •	Validation-based (optimistic) protocols: appropriate when conflicts between transactions are expected to be rare. Each transaction executes in three phases — a read phase (reading data items and performing computations without making any updates to the actual database), a validation phase (checking that the transaction's updates will maintain serializability with respect to other concurrently validated transactions), and a write phase (applying the updates to the database, only if validation succeeds).
+
 •	Multiversion schemes: instead of overwriting a data item, each successful write creates a new version of the item, while older versions are retained — read operations can then be directed to an appropriate older version, allowing reads to proceed without waiting and without conflicting with writes. Multiversion two-phase locking and multiversion timestamp ordering are examples of such schemes.
+
 •	Snapshot isolation: a widely-used multiversion concurrency-control technique (used by many commercial systems) in which each transaction reads data from a snapshot of the database taken at the time the transaction started, and is allowed to commit only if the values it has updated have not been changed by any other transaction since that snapshot — this provides good performance for read-heavy workloads, but can permit certain anomalies (such as write skew) that prevent it from guaranteeing full serializability in all cases.
 
 7.8 Recovery Algorithms
+
 Recovery algorithms are techniques used to ensure database consistency, transaction atomicity, and durability despite failures (such as system crashes that erase the contents of volatile/main memory, but leave non-volatile storage such as disk intact).
+
 •	Log-based recovery: the most widely used structure for recording database modifications is the log — a sequence of log records recording all the update activities in the database. Before any actual update to the database is performed, the corresponding log record (containing the old and/or new values of the data item) must be written to stable storage — a rule known as the write-ahead logging (WAL) protocol.
+
 •	Deferred database modification: a transaction does not actually modify the database until it has partially committed — instead, all updates are recorded in the log, and the log records are used to perform the actual updates only after the transaction reaches its commit point.
+
 •	Immediate database modification: database updates may be applied while the transaction is still active — the old value of the data item must be logged before the update is applied, so that the system can undo the update if the transaction subsequently aborts.
+
 •	Checkpoints: when a system failure occurs, the system must consult the log to determine which transactions need to be redone (committed transactions whose updates may not have reached disk) and which need to be undone (incomplete/aborted transactions). To reduce the amount of log that needs to be searched, the system periodically performs checkpoints, recording (at that point in time) the list of transactions that are active, after which recovery only needs to consider transactions that were active at or after the most recent checkpoint.
+
 •	Recovery after a crash typically follows an algorithm (such as the well-known ARIES algorithm) involving an analysis pass (to determine which transactions to redo/undo), a redo pass (to reapply the effects of all transactions, committed or not, from the appropriate point in the log), and an undo pass (to roll back the effects of transactions that had not committed at the time of the crash).
 
 7.9 Remote Backup Systems
+
 Remote backup (or remote standby) systems provide a high degree of resilience, allowing transaction processing to continue even if the entire primary site is destroyed (e.g., due to fire, flood, or earthquake), by maintaining a copy of the database at a geographically remote location.
+
 •	Log records from the primary site are continuously shipped to the remote backup site, which uses them to keep its copy of the database up to date with the primary.
+
 •	If the primary site fails, the remote backup site takes over processing — but only after performing recovery using the shipped log records, to bring its database state up to the point reflected by the most recently received log records.
+
 •	Modes of operation: in synchronous (or 'hot spare') mode, a transaction does not commit at the primary until its log records have been received and acknowledged by the backup site, ensuring no committed data is lost if the primary fails, but at the cost of increased commit latency; in asynchronous mode, the primary can commit a transaction before the log records reach the backup, improving performance but risking the loss of the most recent transactions if the primary fails before shipping their log records.
+
 •	Time to recovery and time to commit are the two key performance metrics traded off when designing a remote backup configuration, alongside the desired durability guarantee in the event of a site failure.
