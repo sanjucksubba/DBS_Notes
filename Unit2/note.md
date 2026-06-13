@@ -12,6 +12,7 @@ The design process for a database application can be divided into six phases:
 6.	Application and security design — designing the application programs and security/access controls around the database.
    
 
+
 2.2 Relational Modeling
 
 The relational model represents data as a collection of relations (tables). Key terminology:
