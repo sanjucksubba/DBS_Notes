@@ -9,6 +9,7 @@ A database system provides users with an abstract view of data — it hides cert
 These levels are tied together by the concept of a schema (the overall design/structure of the database) versus an instance (the actual data stored at a particular moment). A data model is a collection of conceptual tools for describing data, relationships, semantics, and constraints (e.g., relational model, entity-relationship model, object-based model, semi-structured/XML model).
 
 1.2 Purpose of Database Systems
+
 Before DBMSs, organizations stored data in file-processing systems using application programs that directly read/wrote files. This approach had major drawbacks:
 •	Data redundancy and inconsistency — same information duplicated in multiple files, causing wasted space and inconsistent copies.
 •	Difficulty in accessing data — every new query/task required writing a new program.
@@ -29,6 +30,7 @@ A DBMS addresses all these problems by providing centralized control, data abstr
 •	Present: A mix of relational, NoSQL, NewSQL, and cloud-based/distributed database systems coexist, chosen based on application requirements.
 
 1.4 Database-System Applications
+
 Databases are used across nearly every domain. Common categories include:
 •	Enterprise Information: sales, accounting, human resources, manufacturing, online retail.
 •	Banking and Finance: account records, transactions, loans, online banking, stock and bond trading.
@@ -40,12 +42,14 @@ Databases are used across nearly every domain. Common categories include:
 •	Document/text databases: large collections of text documents (legal, news) with full-text search capability.
 
 1.5 Database Languages
+
 A DBMS provides two types of language constructs:
 Data Definition Language (DDL): used to define the database schema (e.g., CREATE, ALTER, DROP). The output of compiling DDL statements is stored in a data dictionary (system catalog) — a special set of tables containing metadata, such as schema, integrity constraints, and authorization information.
 Data Manipulation Language (DML): used to express queries and updates (e.g., SELECT, INSERT, UPDATE, DELETE). DMLs can be procedural (specify what data and how to get it, e.g., relational algebra) or declarative/non-procedural (specify what data is needed without specifying how to get it, e.g., SQL — also called declarative DML).
 In practice, the term 'query language' is commonly used as a synonym for DML, although technically queries are only part of DML.
 
 1.6 Database Design
+
 The database design process broadly involves the following phases:
 1.	Requirements analysis: understand what the application needs to do — what data must be stored and what operations need to be performed on it.
 2.	Conceptual design: produce a high-level description of the data, often using the Entity-Relationship (E-R) model, capturing entities, relationships, and constraints.
@@ -54,18 +58,21 @@ The database design process broadly involves the following phases:
 Good design also involves verifying that the schema satisfies desirable properties, particularly avoiding unnecessary duplication of data (addressed in depth in Unit V — normalization).
 
 1.7 Database Engine
+
 The database engine is the core software component that provides several key services. Its major components are:
 Storage manager: provides the interface between the low-level data stored in the database and the application programs/queries. It is responsible for interaction with the file system, efficient storing/retrieving/updating of data, and includes the authorization and integrity manager, transaction manager, file manager, and buffer manager.
 Query processor: translates DML statements into low-level instructions the storage manager understands. Includes the DDL interpreter, DML compiler (which performs query optimization to pick an efficient execution plan), and query evaluation engine (which executes the plan).
 Transaction manager: ensures the database remains in a consistent state despite system failures and concurrent transaction execution, enforcing ACID properties.
 
 1.8 Database and Application Architecture
+
 Database applications are typically split into front-end and back-end portions, often arranged in tiers:
 •	One-tier (centralized) architecture: the database, application logic, and user interface all run on a single machine — typical of early mainframe systems.
 •	Two-tier architecture: the application resides at the client machine and communicates with the database server directly via query-language statements, often through an API such as ODBC or JDBC.
 •	Three-tier architecture: the client machine acts as a front end only and does not contain direct database calls. Instead, the client communicates with an application server (which contains the business logic), which in turn communicates with the database system. This is the dominant architecture for Web applications, since it adds an extra layer of security and scalability and centralizes business rules.
 
 1.9 Database Users and Administrators
+
 Database systems involve people with different roles and levels of interaction with the system.
 Users (by interaction type)
 •	Naive users: interact with the system by invoking pre-written application programs (e.g., a bank teller using a transaction form).
